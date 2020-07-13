@@ -31,42 +31,34 @@ public class UserDaoImpl implements UserDao {
         ResultSet rs = null;
 
         try {
-            // 通过数据源获取连接
+            // get connection through dataSource
             connection = dataSource.getConnection();
 
-            // 定义sql语句 ?表示占位符
+            // Declare the SQL statement with a placeholder
             String sql = "select * from user where username = ?";
 
-            // 获取预处理 statement
+            // get prepared statement
             preparedStatement = connection.prepareStatement(sql);
 
-            // 设置参数，第一个参数为 sql 语句中参数的序号（从 1 开始），第二个参数为设置的
+            // set parameter
             preparedStatement.setObject(1, param.get("username"));
 
-            // 向数据库发出 sql 执行查询，查询出结果集
+            // execute the query
             rs = preparedStatement.executeQuery();
 
-            // 遍历查询结果集
+            // iterate the result set
             List<User> results = new ArrayList<User>();
             User result = null;
             Class<?> clazz = User.class;
             while (rs.next()) {
-                // 遍历一行数据，则创建一个User对象
                 result = (User) clazz.newInstance();
-                // 获取结果集的元数据
                 ResultSetMetaData metaData = rs.getMetaData();
-                // 获取每一行包含的列的数量
                 int columnCount = metaData.getColumnCount();
-                // 遍历所有列
                 for (int i = 0; i < columnCount; i++) {
-                    // 获取每一列的名称
                     String columnName = metaData.getColumnName(i + 1);
-                    // 通过反射获取指定属性名称的Field对象（保证列名和属性名一致）
                     Field field = clazz.getDeclaredField(columnName);
-                    // 设置暴力破解
                     field.setAccessible(true);
 
-                    // 给私有属性赋值
                     field.set(result, rs.getObject(i + 1));
                 }
 
@@ -77,7 +69,7 @@ public class UserDaoImpl implements UserDao {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // 释放资源
+            // close resources
             if (rs != null) {
                 try {
                     rs.close();
@@ -96,6 +88,8 @@ public class UserDaoImpl implements UserDao {
                 try {
                     connection.close();
                 } catch (SQLException e) {
+                    e.printStackTrace();
+
                 }
             }
         }
