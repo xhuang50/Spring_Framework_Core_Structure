@@ -4,7 +4,7 @@ import com.redline.springcore.dao.UserDaoImpl;
 import com.redline.springcore.po.User;
 import com.redline.springcore.service.UserService;
 import com.redline.springcore.service.UserServiceImpl;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
 
 import java.util.HashMap;

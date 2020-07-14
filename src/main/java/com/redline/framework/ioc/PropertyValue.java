@@ -1,4 +1,4 @@
-package com.redline.springcore.ioc;
+package com.redline.framework.ioc;
 
 /**
  *  Encapsulate a single property tag info

@@ -1,9 +1,9 @@
 package com.redline.springcore.test;
 
-import com.redline.springcore.ioc.BeanDefinition;
-import com.redline.springcore.ioc.PropertyValue;
-import com.redline.springcore.ioc.RuntimeBeanReference;
-import com.redline.springcore.ioc.TypedStringValue;
+import com.redline.springcore.ioc.BeanDefinitionOriginal;
+import com.redline.springcore.ioc.PropertyValueOriginal;
+import com.redline.springcore.ioc.RuntimeBeanReferenceOriginal;
+import com.redline.springcore.ioc.TypedStringValueOriginal;
 import com.redline.springcore.po.User;
 import com.redline.springcore.service.UserService;
 import org.dom4j.Document;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class DemoV2 {
     // Store the definition of different beans
-    private Map<String, BeanDefinition> beanDefinitions = new HashMap<>();
+    private Map<String, BeanDefinitionOriginal> beanDefinitions = new HashMap<>();
     // Store the singleton beans
     private Map<String, Object> singletonObjects = new HashMap<>();
 
@@ -78,9 +78,9 @@ public class DemoV2 {
             String beanName = id == null ? name : id;
             Class<?> clazzType = Class.forName(clazzName);
             beanName = beanName == null ? clazzType.getSimpleName() : beanName;
-            // Create the BeanDefinition object
+            // Create the BeanDefinitionOriginal object
             // Use constructor.
-            BeanDefinition beanDefinition = new BeanDefinition(clazzName, beanName);
+            BeanDefinitionOriginal beanDefinition = new BeanDefinitionOriginal(clazzName, beanName);
             beanDefinition.setInitMethod(initMethod);
             beanDefinition.setScope(scope);
             // get property tags
@@ -96,7 +96,7 @@ public class DemoV2 {
         }
     }
 
-    private void parsePropertyElement(BeanDefinition beanDefinition, Element propertyElement) {
+    private void parsePropertyElement(BeanDefinitionOriginal beanDefinition, Element propertyElement) {
         if (propertyElement == null)
             return;
 
@@ -111,23 +111,23 @@ public class DemoV2 {
         }
 
         /**
-         * PropertyValue encapsulates a property tag info
+         * PropertyValueOriginal encapsulates a property tag info
          */
-        PropertyValue pv = null;
+        PropertyValueOriginal pv = null;
 
         if (value != null && !value.equals("")) {
             // 因为spring配置文件中的value是String类型，而对象中的属性值是各种各样的，所以需要存储类型
-            TypedStringValue typeStringValue = new TypedStringValue(value);
+            TypedStringValueOriginal typeStringValue = new TypedStringValueOriginal(value);
 
             Class<?> targetType = getTypeByFieldName(beanDefinition.getClazzName(), name);
             typeStringValue.setTargetType(targetType);
 
-            pv = new PropertyValue(name, typeStringValue);
+            pv = new PropertyValueOriginal(name, typeStringValue);
             beanDefinition.addPropertyValue(pv);
         } else if (ref != null && !ref.equals("")) {
 
-            RuntimeBeanReference reference = new RuntimeBeanReference(ref);
-            pv = new PropertyValue(name, reference);
+            RuntimeBeanReferenceOriginal reference = new RuntimeBeanReferenceOriginal(ref);
+            pv = new PropertyValueOriginal(name, reference);
             beanDefinition.addPropertyValue(pv);
         } else {
             return;
@@ -183,7 +183,7 @@ public class DemoV2 {
             return bean;
         }
         // 2. otherwise, create the bean with info from definition collection
-        BeanDefinition beanDefinition = beanDefinitions.get(beanName);
+        BeanDefinitionOriginal beanDefinition = beanDefinitions.get(beanName);
         if (beanDefinition == null){
             return null;
         }
@@ -200,7 +200,7 @@ public class DemoV2 {
      * @param beanDefinition bean structure
      * @return
      */
-    private Object createBean(BeanDefinition beanDefinition) {
+    private Object createBean(BeanDefinitionOriginal beanDefinition) {
         // Three steps:
         // 1. Instantiate
         Object bean = createBeanInstance(beanDefinition);
@@ -217,12 +217,12 @@ public class DemoV2 {
      * @param bean
      * @param beanDefinition
      */
-    private void initializeBean(Object bean, BeanDefinition beanDefinition) {
+    private void initializeBean(Object bean, BeanDefinitionOriginal beanDefinition) {
         //invoke init() method
         invokeInitMethod(bean, beanDefinition);
     }
 
-    private void invokeInitMethod(Object bean, BeanDefinition beanDefinition) {
+    private void invokeInitMethod(Object bean, BeanDefinitionOriginal beanDefinition) {
         try{
             String initMethod = beanDefinition.getInitMethod();
             if (initMethod == null || "".equals(initMethod)){
@@ -236,9 +236,9 @@ public class DemoV2 {
         }
     }
 
-    private void populateBean(Object bean, BeanDefinition beanDefinition) {
-        List<PropertyValue> propertyValues = beanDefinition.getPropertyValues();
-        for (PropertyValue pv : propertyValues) {
+    private void populateBean(Object bean, BeanDefinitionOriginal beanDefinition) {
+        List<PropertyValueOriginal> propertyValues = beanDefinition.getPropertyValues();
+        for (PropertyValueOriginal pv : propertyValues) {
             // get property name and value
             String name = pv.getName();
             Object value = pv.getValue();
@@ -252,7 +252,7 @@ public class DemoV2 {
         }
     }
 
-    private void setPropertyValue(Object bean, String name, Object wrappedValue, BeanDefinition beanDefinition) {
+    private void setPropertyValue(Object bean, String name, Object wrappedValue, BeanDefinitionOriginal beanDefinition) {
         try{
             Class<?> clazzType = beanDefinition.getClazzType();
             Field field = clazzType.getDeclaredField(name);
@@ -264,8 +264,8 @@ public class DemoV2 {
     }
 
     private Object resolveValue(Object value) {
-        if (value instanceof TypedStringValue) {
-            TypedStringValue typedStringValue = (TypedStringValue) value;
+        if (value instanceof TypedStringValueOriginal) {
+            TypedStringValueOriginal typedStringValue = (TypedStringValueOriginal) value;
             String stringValue = typedStringValue.getValue();
             Class<?> targetType = typedStringValue.getTargetType();
             // is there a cleaner way?
@@ -286,8 +286,8 @@ public class DemoV2 {
             }else if (targetType == Boolean.class){
                 return Boolean.parseBoolean(stringValue);
             }
-        } else if (value instanceof RuntimeBeanReference){
-            RuntimeBeanReference runtimeBeanReference = (RuntimeBeanReference) value;
+        } else if (value instanceof RuntimeBeanReferenceOriginal){
+            RuntimeBeanReferenceOriginal runtimeBeanReference = (RuntimeBeanReferenceOriginal) value;
             String ref = runtimeBeanReference.getRef();
             // recursively get the referred bean
             return getBean(ref);
@@ -300,12 +300,12 @@ public class DemoV2 {
      * @param beanDefinition
      * @return
      */
-    private Object createBeanInstance(BeanDefinition beanDefinition) {
+    private Object createBeanInstance(BeanDefinitionOriginal beanDefinition) {
         // 1. Factory static method
         // 2. Factory object
         // 3. Constructor
         Object bean = createBeanByConstructor(beanDefinition);
-        return null;
+        return bean;
     }
 
     /**
@@ -313,7 +313,7 @@ public class DemoV2 {
      * @param beanDefinition
      * @return
      */
-    private Object createBeanByConstructor(BeanDefinition beanDefinition) {
+    private Object createBeanByConstructor(BeanDefinitionOriginal beanDefinition) {
         Class<?> clazzType = beanDefinition.getClazzType();
         try {
             Constructor<?> constructor = clazzType.getDeclaredConstructor();

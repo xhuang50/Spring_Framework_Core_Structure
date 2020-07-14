@@ -1,4 +1,4 @@
-package com.redline.springcore.ioc;
+package com.redline.framework.ioc;
 
 import java.util.ArrayList;
 import java.util.List;
