@@ -1,6 +1,6 @@
 package com.redline.springcore.ioc;
 
-public class RuntimeBeanReference {
+public class RuntimeBeanReferenceOriginal {
     // reference property value
     private String ref;
 
@@ -12,7 +12,7 @@ public class RuntimeBeanReference {
         this.ref = ref;
     }
 
-    public RuntimeBeanReference(String ref) {
+    public RuntimeBeanReferenceOriginal(String ref) {
         super();
         this.ref = ref;
     }

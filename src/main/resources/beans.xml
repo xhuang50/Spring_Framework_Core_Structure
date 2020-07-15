@@ -1,11 +1,11 @@
 <beans>
     <bean id="userService"
-          class="com.kkb.spring.service.UserServiceImpl">
+          class="com.redline.springcore.service.UserServiceImpl">
         <property name="userDao" ref="userDao"></property>
     </bean>
 
     <!-- init method -->
-    <bean id="userDao" class="com.kkb.spring.dao.UserDaoImpl"
+    <bean id="userDao" class="com.redline.springcore.dao.UserDaoImpl"
           init-method="init">
         <property name="dataSource" ref="dataSource"></property>
     </bean>

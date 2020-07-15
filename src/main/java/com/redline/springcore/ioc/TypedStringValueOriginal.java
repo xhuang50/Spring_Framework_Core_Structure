@@ -1,11 +1,11 @@
 package com.redline.springcore.ioc;
 
-public class TypedStringValue {
+public class TypedStringValueOriginal {
     private String value;
 
     private Class<?> targetType;
 
-    public TypedStringValue(String value) {
+    public TypedStringValueOriginal(String value) {
         this.value = value;
     }
 
