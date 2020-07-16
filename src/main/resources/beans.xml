@@ -12,7 +12,7 @@
 
     <!-- instantiate and inject -->
     <bean id="dataSource"
-          class="org.apache.commons.dbcp.BasicDataSource" scope="singleton" >
+          class="org.apache.commons.dbcp2.BasicDataSource" scope="singleton" >
         <property name="driverClassName"
                   value="com.mysql.jdbc.Driver"></property>
         <property name="url"
