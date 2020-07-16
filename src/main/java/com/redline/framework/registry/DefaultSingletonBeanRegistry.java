@@ -17,6 +17,8 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
     @Override
     public void addSingleton(String beanName, Object bean) {
         // TODO Ensure the the bean is singleton in the map
-        this.singletonObjects.put(beanName, bean);
+        synchronized (singletonObjects){
+            this.singletonObjects.put(beanName, bean);
+        }
     }
 }
